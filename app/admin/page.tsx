@@ -1,5 +1,7 @@
+"use client"
+
 import { AdminDashboard } from "@/components/admin/admin-dashboard"
 
-export default async function AdminPage() {
+export default function AdminPage() {
   return <AdminDashboard />
 }

@@ -1,8 +1,5 @@
 "use client"
 
-import { useState } from "react"
-import type { User } from "@supabase/supabase-js"
-import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GunsManager } from "./guns-manager"
 import { EnemiesManager } from "./enemies-manager"
@@ -10,42 +7,14 @@ import { ItemsManager } from "./items-manager"
 import { BossesManager } from "./bosses-manager"
 import { NpcsManager } from "./npcs-manager"
 import { MiscManager } from "./misc-manager"
-import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import { LogOut } from "lucide-react"
 
-interface AdminDashboardProps {
-  user: User
-}
-
-export function AdminDashboard({ user }: AdminDashboardProps) {
-  const router = useRouter()
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true)
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/")
-  }
-
+export function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#1a1410] p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-[#d4af37] mb-2">Ammonomicon Admin</h1>
-            <p className="text-[#c9b896]">Logged in as: {user.email}</p>
-          </div>
-          <Button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            variant="outline"
-            className="bg-[#2a1f1a] border-[#8b6f47] text-[#d4af37] hover:bg-[#3a2f2a]"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            {isLoggingOut ? "Logging out..." : "Logout"}
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-[#d4af37] mb-2">Ammonomicon Admin</h1>
+          <p className="text-[#c9b896]">Manage your Enter the Gungeon database</p>
         </div>
 
         <Tabs defaultValue="guns" className="w-full">
