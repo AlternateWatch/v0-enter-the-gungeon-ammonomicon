@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react"
 import { Plus, Pencil, Trash2, Upload, X } from "lucide-react"
-import { put } from "@vercel/blob"
+import { uploadImage } from "@/app/actions/upload-image"
 
 interface GunsPageProps {
   searchQuery: string
@@ -138,10 +138,9 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
       let imageUrl = editingGun.image_url
 
       if (imageFile) {
-        const blob = await put(imageFile.name, imageFile, {
-          access: "public",
-        })
-        imageUrl = blob.url
+        const formData = new FormData()
+        formData.append("file", imageFile)
+        imageUrl = await uploadImage(formData)
       }
 
       const gunData = {
@@ -231,12 +230,15 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
 
             <CardHeader className="cursor-pointer" onClick={() => handleCardClick(gun)}>
               {gun.image_url && (
-                <div className="w-full h-40 mb-4 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                <div className="w-full h-40 mb-4 bg-muted rounded-lg flex items-center justify-center p-4">
                   <img
                     src={gun.image_url || "/placeholder.svg"}
                     alt={gun.name}
-                    className="max-h-full max-w-full object-contain"
-                    style={{ imageRendering: "pixelated" }}
+                    className="w-32 h-auto object-contain"
+                    style={{
+                      imageRendering: "pixelated",
+                      WebkitFontSmoothing: "none",
+                    }}
                   />
                 </div>
               )}
@@ -277,12 +279,15 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
           {selectedGun && (
             <div className="space-y-6">
               {selectedGun.image_url && (
-                <div className="w-full h-96 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center p-8">
                   <img
                     src={selectedGun.image_url || "/placeholder.svg"}
                     alt={selectedGun.name}
-                    className="max-h-full max-w-full object-contain"
-                    style={{ imageRendering: "pixelated" }}
+                    className="w-80 h-auto object-contain"
+                    style={{
+                      imageRendering: "pixelated",
+                      WebkitFontSmoothing: "none",
+                    }}
                   />
                 </div>
               )}
@@ -421,17 +426,21 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
             <div>
               <Label>Imagen</Label>
               <p className="text-sm text-muted-foreground mt-1 mb-2">
-                Tamaño recomendado: 256x256 píxeles o similar (formato PNG con fondo transparente)
+                Usa el sprite original de la wiki (puede ser muy pequeño, ej. 18×10px). Se escalará automáticamente
+                manteniendo el estilo pixel-art.
               </p>
               <div className="mt-2 space-y-4">
                 {imagePreview ? (
                   <div className="relative">
-                    <div className="w-full h-96 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                    <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center p-8">
                       <img
                         src={imagePreview || "/placeholder.svg"}
                         alt="Preview"
-                        className="max-h-full max-w-full object-contain"
-                        style={{ imageRendering: "pixelated" }}
+                        className="w-80 h-auto object-contain"
+                        style={{
+                          imageRendering: "pixelated",
+                          WebkitFontSmoothing: "none",
+                        }}
                       />
                     </div>
                     <Button
