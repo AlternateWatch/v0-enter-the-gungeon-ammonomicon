@@ -484,7 +484,7 @@ export function GunsManager() {
       </div>
 
       {isLoading ? (
-        <p className="text-[#c9b896]">Loading...</p>
+        <p className="text-[#c9b896]">Cargando...</p>
       ) : (
         <div className="grid gap-4">
           {guns.map((gun) => (

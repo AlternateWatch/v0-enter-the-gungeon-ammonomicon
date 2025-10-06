@@ -60,8 +60,7 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
         <div>
           <h2 className="text-3xl font-bold text-foreground mb-2">Bosses</h2>
           <p className="text-muted-foreground">
-            Complete guide to all bosses in Enter the Gungeon. Replace this placeholder data with actual wiki
-            information.
+            Guía completa para todos los bosses de Enter The Gungeon.
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
@@ -103,7 +102,7 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
 
       {filteredBosses.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No bosses found matching your search.</p>
+          <p className="text-muted-foreground">No se han encontrado bosses que concuerden con tu búsqueda.</p>
         </div>
       )}
 

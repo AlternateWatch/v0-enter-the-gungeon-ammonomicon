@@ -111,7 +111,7 @@ export function BossesManager() {
           <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-[#2a1f1a] border-[#8b6f47]">
             <DialogHeader>
               <DialogTitle className="text-[#d4af37]">{editingBoss ? "Edit Boss" : "Add New Boss"}</DialogTitle>
-              <DialogDescription className="text-[#c9b896]">Fill in the boss details below</DialogDescription>
+              <DialogDescription className="text-[#c9b896]">Introduce los detalles del boss abajo</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -214,7 +214,7 @@ export function BossesManager() {
       </div>
 
       {isLoading ? (
-        <p className="text-[#c9b896]">Loading...</p>
+        <p className="text-[#c9b896]">Cargando...</p>
       ) : (
         <div className="grid gap-4">
           {bosses.map((boss) => (

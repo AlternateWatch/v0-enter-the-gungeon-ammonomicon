@@ -64,10 +64,9 @@ export function ItemsPage({ searchQuery }: ItemsPageProps) {
     <div className="p-6">
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Items</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Ítems</h2>
           <p className="text-muted-foreground">
-            Complete catalog of all items in Enter the Gungeon. Replace this placeholder data with actual wiki
-            information.
+            Catálogo completo de todos los ítems de Enter The Gungeon.
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
@@ -107,7 +106,7 @@ export function ItemsPage({ searchQuery }: ItemsPageProps) {
 
       {filteredItems.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No items found matching your search.</p>
+          <p className="text-muted-foreground">No hay ítems que coincidan con tu búsqueda.</p>
         </div>
       )}
 

@@ -68,10 +68,9 @@ export function EnemiesPage({ searchQuery }: EnemiesPageProps) {
     <div className="p-6">
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Enemies</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Enemigos</h2>
           <p className="text-muted-foreground">
-            Complete bestiary of all enemies in Enter the Gungeon. Replace this placeholder data with actual wiki
-            information.
+            Bestiario completo de todos los enemigos de Enter The Gungeon.
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
@@ -109,7 +108,7 @@ export function EnemiesPage({ searchQuery }: EnemiesPageProps) {
 
       {filteredEnemies.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No enemies found matching your search.</p>
+          <p className="text-muted-foreground">No se han encontrado enemigos que concuerden con tu búsqueda.</p>
         </div>
       )}
 

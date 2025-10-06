@@ -191,8 +191,8 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Guns</h2>
-          <p className="text-muted-foreground">Complete arsenal of all guns in Enter the Gungeon.</p>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Armas</h2>
+          <p className="text-muted-foreground">Arsenal completo de todas las armas de Enter The Gungeon.</p>
         </div>
         <Button onClick={handleAddNew} className="gap-2">
           <Plus className="h-4 w-4" />
@@ -257,13 +257,13 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
 
       {filteredGuns.length === 0 && !error && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No guns found matching your search.</p>
+          <p className="text-muted-foreground">No hay armas que coincidan con tu búsqueda.</p>
         </div>
       )}
 
       {error && (
         <div className="text-center py-12">
-          <p className="text-destructive">Error loading guns: {error}</p>
+          <p className="text-destructive">Error cargando armas: {error}</p>
         </div>
       )}
 

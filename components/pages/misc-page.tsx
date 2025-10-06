@@ -56,10 +56,9 @@ export function MiscPage({ searchQuery }: MiscPageProps) {
     <div className="p-6">
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Miscellaneous</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Misceláneo</h2>
           <p className="text-muted-foreground">
-            Game mechanics, secrets, shrines, and other information. Replace this placeholder data with actual wiki
-            information.
+            Mecánicas de juego, secretos, altares y ottra información.
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
@@ -90,7 +89,7 @@ export function MiscPage({ searchQuery }: MiscPageProps) {
 
       {filteredMisc.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No items found matching your search.</p>
+          <p className="text-muted-foreground">No hay ítems que coincidan con tu búsqueda.</p>
         </div>
       )}
 

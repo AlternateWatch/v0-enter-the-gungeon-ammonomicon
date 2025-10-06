@@ -61,7 +61,7 @@ export function NpcsPage({ searchQuery }: NpcsPageProps) {
         <div>
           <h2 className="text-3xl font-bold text-foreground mb-2">NPCs</h2>
           <p className="text-muted-foreground">
-            Complete guide to all NPCs in Enter the Gungeon. Replace this placeholder data with actual wiki information.
+            Guía completa de todos los NPCs en Enter The Gungeon.
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
@@ -96,7 +96,7 @@ export function NpcsPage({ searchQuery }: NpcsPageProps) {
 
       {filteredNpcs.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No NPCs found matching your search.</p>
+          <p className="text-muted-foreground">No hay NPCs que coincidan con tu búsqueda.</p>
         </div>
       )}
 

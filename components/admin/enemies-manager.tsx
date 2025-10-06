@@ -110,7 +110,7 @@ export function EnemiesManager() {
           <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-[#2a1f1a] border-[#8b6f47]">
             <DialogHeader>
               <DialogTitle className="text-[#d4af37]">{editingEnemy ? "Edit Enemy" : "Add New Enemy"}</DialogTitle>
-              <DialogDescription className="text-[#c9b896]">Fill in the enemy details below</DialogDescription>
+              <DialogDescription className="text-[#c9b896]">Introduce los detalles del enemigo debajo</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
