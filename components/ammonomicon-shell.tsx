@@ -13,12 +13,12 @@ import { MiscPage } from "@/components/pages/misc-page"
 type PageType = "guns" | "enemies" | "items" | "bosses" | "npcs" | "misc"
 
 const navigation = [
-  { id: "guns" as PageType, name: "Guns", icon: Crosshair },
-  { id: "enemies" as PageType, name: "Enemies", icon: Skull },
+  { id: "guns" as PageType, name: "Armas", icon: Crosshair },
+  { id: "enemies" as PageType, name: "Enemigos", icon: Skull },
   { id: "items" as PageType, name: "Items", icon: Package },
   { id: "bosses" as PageType, name: "Bosses", icon: Skull },
   { id: "npcs" as PageType, name: "NPCs", icon: Users },
-  { id: "misc" as PageType, name: "Miscellaneous", icon: MoreHorizontal },
+  { id: "misc" as PageType, name: "Misceláneo", icon: MoreHorizontal },
 ]
 
 export function AmmonomiconShell() {
