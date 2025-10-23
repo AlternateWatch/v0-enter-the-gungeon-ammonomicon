@@ -1,51 +1,53 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Plus, Pencil, Trash2, Upload, X } from "lucide-react"
+import { uploadImage } from "@/app/actions/upload-image"
 
 interface BossesPageProps {
   searchQuery: string
 }
 
-// 1. Definimos la estructura de datos para un Jefe
 interface Boss {
   id: string
   name: string
-  floor: string | null
-  difficulty: string | null
-  description: string | null
+  location: string | null
   health: string | null
-  phases: string | null
+  phases: number | null
   attacks: string | null
-  // Si tienes una columna para imagen, descomenta la siguiente línea
-  // image_url: string | null
+  description: string | null
+  strategy: string | null
+  notes: string | null
+  image_url: string | null
 }
 
 export function BossesPage({ searchQuery }: BossesPageProps) {
-  // 2. Añadimos todos los estados necesarios, como en GunsPage
   const [bosses, setBosses] = useState<Boss[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [selectedBoss, setSelectedBoss] = useState<Boss | null>(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [editingBoss, setEditingBoss] = useState<Partial<Boss> | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
-  // 3. Obtenemos los datos de Supabase cuando el componente se carga
   useEffect(() => {
     fetchBosses()
   }, [])
 
   const fetchBosses = async () => {
     const supabase = createClient()
-    // Asegúrate de que tu tabla se llama "bosses"
     const { data, error } = await supabase.from("bosses").select("*").order("name")
 
     if (error) {
@@ -55,59 +57,103 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
     }
   }
 
-  // 4. Funciones para abrir los modales de "Añadir" y "Editar"
+  const handleCardClick = (boss: Boss) => {
+    setSelectedBoss(boss)
+    setIsDetailOpen(true)
+  }
+
   const handleAddNew = () => {
     setEditingBoss({
       name: "",
-      floor: "",
-      difficulty: "",
-      description: "",
+      location: "",
       health: "",
-      phases: "",
+      phases: null,
       attacks: "",
+      description: "",
+      strategy: "",
+      notes: "",
+      image_url: null,
     })
+    setImageFile(null)
+    setImagePreview(null)
     setIsEditOpen(true)
   }
 
   const handleEdit = (boss: Boss) => {
     setEditingBoss(boss)
+    setImageFile(null)
+    setImagePreview(boss.image_url)
     setIsEditOpen(true)
   }
 
-  // 5. Función para guardar (crear o actualizar) un jefe
-  const handleSave = async () => {
-    if (!editingBoss?.name) return
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
-    setIsSaving(true)
+  const handleRemoveImage = () => {
+    setImageFile(null)
+    setImagePreview(null)
+    if (editingBoss) {
+      setEditingBoss({ ...editingBoss, image_url: null })
+    }
+  }
+
+  const handleSave = async () => {
+    if (!editingBoss?.name) {
+      return
+    }
+
+    setIsUploading(true)
     const supabase = createClient()
 
     try {
-      const bossData = { ...editingBoss }
+      let imageUrl = editingBoss.image_url
+
+      if (imageFile) {
+        const formData = new FormData()
+        formData.append("file", imageFile)
+        imageUrl = await uploadImage(formData)
+      }
+
+      const bossData = {
+        ...editingBoss,
+        image_url: imageUrl,
+        phases: editingBoss.phases ? Number(editingBoss.phases) : null,
+      }
 
       if (editingBoss.id) {
-        // Actualizar un jefe existente
         const { error } = await supabase.from("bosses").update(bossData).eq("id", editingBoss.id)
         if (error) throw error
       } else {
-        // Insertar un nuevo jefe
         const { error } = await supabase.from("bosses").insert([bossData])
         if (error) throw error
       }
 
-      await fetchBosses() // Refrescar la lista
+      await fetchBosses()
       setIsEditOpen(false)
       setEditingBoss(null)
+      setImageFile(null)
+      setImagePreview(null)
     } catch (err) {
-      console.error("Error guardando el jefe:", err)
-      setError(err instanceof Error ? err.message : "Error guardando el jefe")
+      console.error("Error saving boss:", err)
+      setError(err instanceof Error ? err.message : "Error saving boss")
     } finally {
-      setIsSaving(false)
+      setIsUploading(false)
     }
   }
 
-  // 6. Función para eliminar un jefe
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estás seguro de que quieres eliminar este jefe?")) return
+    if (!confirm("¿Estás seguro de que quieres eliminar este jefe?")) {
+      return
+    }
 
     const supabase = createClient()
     const { error } = await supabase.from("bosses").delete().eq("id", id)
@@ -115,7 +161,7 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
     if (error) {
       setError(error.message)
     } else {
-      await fetchBosses() // Refrescar la lista
+      await fetchBosses()
     }
   }
 
@@ -123,22 +169,20 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
 
   return (
     <div className="p-6">
-      <div className="mb-6 flex items-start justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-foreground mb-2">Jefes</h2>
           <p className="text-muted-foreground">Guía completa para todos los jefes de Enter The Gungeon.</p>
         </div>
         <Button onClick={handleAddNew} className="gap-2">
-          <Plus className="w-4 h-4" />
+          <Plus className="h-4 w-4" />
           Añadir Jefe
         </Button>
       </div>
 
-      {/* 7. Actualizamos el grid para mostrar los datos de Supabase y los botones de acción */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredBosses.map((boss) => (
           <Card key={boss.id} className="hover:shadow-lg transition-shadow group relative">
-            {/* Botones de Editar y Borrar que aparecen al pasar el ratón */}
             <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
                 size="icon"
@@ -164,39 +208,23 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
               </Button>
             </div>
 
-            <CardHeader>
+            <CardHeader className="cursor-pointer" onClick={() => handleCardClick(boss)}>
+              {boss.image_url && (
+                <div className="w-full h-40 mb-4 bg-muted rounded-lg flex items-center justify-center p-4">
+                  <img
+                    src={boss.image_url || "/placeholder.svg"}
+                    alt={boss.name}
+                    className="pixel-art w-32 h-auto object-contain"
+                  />
+                </div>
+              )}
               <div className="flex items-start justify-between">
-                <CardTitle className="text-2xl">{boss.name}</CardTitle>
-                {boss.difficulty && (
-                  <Badge variant={boss.difficulty.toLowerCase() === "hard" ? "destructive" : "secondary"}>
-                    {boss.difficulty}
-                  </Badge>
-                )}
+                <CardTitle className="text-lg">{boss.name}</CardTitle>
+                {boss.location && <Badge variant="secondary">{boss.location}</Badge>}
               </div>
-              <CardDescription>{boss.floor}</CardDescription>
             </CardHeader>
-            <CardContent>
-              {boss.description && <p className="text-sm text-muted-foreground mb-4">{boss.description}</p>}
-              <div className="space-y-3 text-sm">
-                {boss.health && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Vida:</span>
-                    <span className="font-mono">{boss.health}</span>
-                  </div>
-                )}
-                {boss.phases && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Fases:</span>
-                    <span className="font-mono">{boss.phases}</span>
-                  </div>
-                )}
-                {boss.attacks && (
-                  <div className="pt-2">
-                    <span className="text-muted-foreground block mb-1">Patrones de Ataque:</span>
-                    <p className="text-sm whitespace-pre-line">{boss.attacks}</p>
-                  </div>
-                )}
-              </div>
+            <CardContent className="cursor-pointer" onClick={() => handleCardClick(boss)}>
+              {boss.description && <p className="text-sm text-muted-foreground line-clamp-2">{boss.description}</p>}
             </CardContent>
           </Card>
         ))}
@@ -214,14 +242,125 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
         </div>
       )}
 
-      {/* 8. Añadimos el Dialog/Modal para editar y crear, igual que en GunsPage */}
+      {/* Detail Modal */}
+      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">{selectedBoss?.name}</DialogTitle>
+            {selectedBoss?.location && (
+              <DialogDescription className="text-base">{selectedBoss.location}</DialogDescription>
+            )}
+          </DialogHeader>
+
+          {selectedBoss && (
+            <div className="space-y-6">
+              {selectedBoss.image_url && (
+                <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center p-8">
+                  <img
+                    src={selectedBoss.image_url || "/placeholder.svg"}
+                    alt={selectedBoss.name}
+                    className="pixel-art w-80 h-auto object-contain"
+                  />
+                </div>
+              )}
+
+              {/* Basic Info */}
+              <div className="grid grid-cols-2 gap-4">
+                {selectedBoss.health && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Vida</p>
+                    <p className="font-medium">{selectedBoss.health}</p>
+                  </div>
+                )}
+                {selectedBoss.phases && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Fases</p>
+                    <p className="font-medium">{selectedBoss.phases}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              {selectedBoss.description && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Descripción</p>
+                  <p className="text-base">{selectedBoss.description}</p>
+                </div>
+              )}
+
+              {/* Attacks */}
+              {selectedBoss.attacks && (
+                <div>
+                  <h3 className="font-semibold mb-2">Patrones de Ataque</h3>
+                  <p className="text-base whitespace-pre-line">{selectedBoss.attacks}</p>
+                </div>
+              )}
+
+              {/* Strategy */}
+              {selectedBoss.strategy && (
+                <div>
+                  <h3 className="font-semibold mb-2">Estrategia</h3>
+                  <p className="text-base whitespace-pre-line">{selectedBoss.strategy}</p>
+                </div>
+              )}
+
+              {/* Notes */}
+              {selectedBoss.notes && (
+                <div>
+                  <h3 className="font-semibold mb-2">Notas</h3>
+                  <p className="text-base whitespace-pre-line">{selectedBoss.notes}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit/Add Modal */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingBoss?.id ? "Editar Jefe" : "Añadir Nuevo Jefe"}</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className="space-y-4">
+            {/* Image Upload */}
+            <div>
+              <Label>Imagen</Label>
+              <p className="text-sm text-muted-foreground mt-1 mb-2">
+                Usa el sprite original de la wiki. Se escalará automáticamente manteniendo el estilo pixel-art.
+              </p>
+              <div className="mt-2 space-y-4">
+                {imagePreview ? (
+                  <div className="relative">
+                    <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center p-8">
+                      <img
+                        src={imagePreview || "/placeholder.svg"}
+                        alt="Preview"
+                        className="pixel-art w-80 h-auto object-contain"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2"
+                      onClick={handleRemoveImage}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground mb-2">Sube una imagen del jefe</p>
+                    <Input type="file" accept="image/*" onChange={handleImageChange} className="max-w-xs mx-auto" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Basic Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="name">Nombre *</Label>
@@ -233,19 +372,12 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="floor">Piso</Label>
+                <Label htmlFor="location">Ubicación</Label>
                 <Input
-                  id="floor"
-                  value={editingBoss?.floor || ""}
-                  onChange={(e) => setEditingBoss({ ...editingBoss, floor: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="difficulty">Dificultad</Label>
-                <Input
-                  id="difficulty"
-                  value={editingBoss?.difficulty || ""}
-                  onChange={(e) => setEditingBoss({ ...editingBoss, difficulty: e.target.value })}
+                  id="location"
+                  value={editingBoss?.location || ""}
+                  onChange={(e) => setEditingBoss({ ...editingBoss, location: e.target.value })}
+                  placeholder="ej., Cámara 2"
                 />
               </div>
               <div>
@@ -257,11 +389,12 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="phases">Fases</Label>
+                <Label htmlFor="phases">Número de Fases</Label>
                 <Input
                   id="phases"
+                  type="number"
                   value={editingBoss?.phases || ""}
-                  onChange={(e) => setEditingBoss({ ...editingBoss, phases: e.target.value })}
+                  onChange={(e) => setEditingBoss({ ...editingBoss, phases: Number(e.target.value) })}
                 />
               </div>
             </div>
@@ -283,15 +416,37 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
                 value={editingBoss?.attacks || ""}
                 onChange={(e) => setEditingBoss({ ...editingBoss, attacks: e.target.value })}
                 rows={4}
+                placeholder="Describe los patrones de ataque del jefe..."
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="strategy">Estrategia</Label>
+              <Textarea
+                id="strategy"
+                value={editingBoss?.strategy || ""}
+                onChange={(e) => setEditingBoss({ ...editingBoss, strategy: e.target.value })}
+                rows={4}
+                placeholder="Consejos y estrategias para derrotar al jefe..."
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="notes">Notas</Label>
+              <Textarea
+                id="notes"
+                value={editingBoss?.notes || ""}
+                onChange={(e) => setEditingBoss({ ...editingBoss, notes: e.target.value })}
+                rows={3}
               />
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsEditOpen(false)} disabled={isSaving}>
+              <Button variant="outline" onClick={() => setIsEditOpen(false)} disabled={isUploading}>
                 Cancelar
               </Button>
-              <Button onClick={handleSave} disabled={isSaving || !editingBoss?.name}>
-                {isSaving ? "Guardando..." : "Guardar"}
+              <Button onClick={handleSave} disabled={isUploading || !editingBoss?.name}>
+                {isUploading ? "Guardando..." : "Guardar"}
               </Button>
             </div>
           </div>

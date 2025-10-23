@@ -23,9 +23,9 @@ interface Gun {
   name: string
   type: string | null
   quality: string | null
-  magazine_size: number | null
-  max_ammo: number | null
-  reload_time: number | null
+  magazine_size: string | null
+  max_ammo: string | null
+  reload_time: string | null
   dps: string | null
   damage: string | null
   fire_rate: string | null
@@ -146,9 +146,6 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
       const gunData = {
         ...editingGun,
         image_url: imageUrl,
-        magazine_size: editingGun.magazine_size ? Number(editingGun.magazine_size) : null,
-        max_ammo: editingGun.max_ammo ? Number(editingGun.max_ammo) : null,
-        reload_time: editingGun.reload_time ? Number(editingGun.reload_time) : null,
       }
 
       if (editingGun.id) {
@@ -347,7 +344,7 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
                   {selectedGun.reload_time && (
                     <div>
                       <p className="text-sm text-muted-foreground">Tiempo de Recarga</p>
-                      <p className="font-mono">{selectedGun.reload_time}s</p>
+                      <p className="font-mono">{selectedGun.reload_time}</p>
                     </div>
                   )}
                   {selectedGun.damage && (
@@ -526,28 +523,30 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
                 <Label htmlFor="magazine_size">Tamaño del Cargador</Label>
                 <Input
                   id="magazine_size"
-                  type="number"
+                  type="text"
                   value={editingGun?.magazine_size || ""}
-                  onChange={(e) => setEditingGun({ ...editingGun, magazine_size: Number(e.target.value) })}
+                  onChange={(e) => setEditingGun({ ...editingGun, magazine_size: e.target.value })}
+                  placeholder="Ej: 6, infinito, etc."
                 />
               </div>
               <div>
                 <Label htmlFor="max_ammo">Munición Máxima</Label>
                 <Input
                   id="max_ammo"
-                  type="number"
+                  type="text"
                   value={editingGun?.max_ammo || ""}
-                  onChange={(e) => setEditingGun({ ...editingGun, max_ammo: Number(e.target.value) })}
+                  onChange={(e) => setEditingGun({ ...editingGun, max_ammo: e.target.value })}
+                  placeholder="Ej: 500, infinito, etc."
                 />
               </div>
               <div>
-                <Label htmlFor="reload_time">Tiempo de Recarga (s)</Label>
+                <Label htmlFor="reload_time">Tiempo de Recarga</Label>
                 <Input
                   id="reload_time"
-                  type="number"
-                  step="0.1"
+                  type="text"
                   value={editingGun?.reload_time || ""}
-                  onChange={(e) => setEditingGun({ ...editingGun, reload_time: Number(e.target.value) })}
+                  onChange={(e) => setEditingGun({ ...editingGun, reload_time: e.target.value })}
+                  placeholder="Ej: 1.5s, N/A, etc."
                 />
               </div>
               <div>
