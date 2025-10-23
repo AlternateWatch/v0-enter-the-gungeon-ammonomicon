@@ -52,9 +52,9 @@ export function AmmonomiconShell() {
         <div className="p-6 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
             <Book className="w-8 h-8 text-sidebar-primary" />
-            <h1 className="text-2xl font-bold text-sidebar-foreground">Ammonomicon</h1>
+            <h1 className="text-2xl font-bold text-sidebar-foreground">Balanomicón</h1>
           </div>
-          <p className="text-sm text-sidebar-foreground/60 mt-2">Enter the Gungeon Wiki</p>
+          <p className="text-sm text-sidebar-foreground/60 mt-2">Enciclopedia de Enter The Gungeon</p>
         </div>
 
         <nav className="flex-1 p-4">
@@ -81,7 +81,7 @@ export function AmmonomiconShell() {
         </nav>
 
         <div className="p-4 border-t border-sidebar-border">
-          <p className="text-xs text-sidebar-foreground/50 text-center">Data from Enter the Gungeon Wiki</p>
+          <p className="text-xs text-sidebar-foreground/50 text-center">Datos sacados del juego y la wiki en inglés de Enter The Gungeon</p>
         </div>
       </aside>
 
@@ -95,7 +95,7 @@ export function AmmonomiconShell() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search the Ammonomicon..."
+                  placeholder="Buscar en el Balanomicón..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 bg-background"
