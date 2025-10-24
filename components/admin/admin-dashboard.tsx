@@ -6,7 +6,6 @@ import { EnemiesManager } from "./enemies-manager"
 import { ItemsManager } from "./items-manager"
 import { BossesManager } from "./bosses-manager"
 import { NpcsManager } from "./npcs-manager"
-import { MiscManager } from "./misc-manager"
 
 export function AdminDashboard() {
   return (
@@ -18,7 +17,7 @@ export function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="guns" className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-[#2a1f1a] border border-[#8b6f47]">
+          <TabsList className="grid w-full grid-cols-5 bg-[#2a1f1a] border border-[#8b6f47]">
             <TabsTrigger value="guns" className="data-[state=active]:bg-[#8b6f47] data-[state=active]:text-[#1a1410]">
               Guns
             </TabsTrigger>
@@ -37,9 +36,6 @@ export function AdminDashboard() {
             <TabsTrigger value="npcs" className="data-[state=active]:bg-[#8b6f47] data-[state=active]:text-[#1a1410]">
               NPCs
             </TabsTrigger>
-            <TabsTrigger value="misc" className="data-[state=active]:bg-[#8b6f47] data-[state=active]:text-[#1a1410]">
-              Misc
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="guns" className="mt-6">
@@ -56,9 +52,6 @@ export function AdminDashboard() {
           </TabsContent>
           <TabsContent value="npcs" className="mt-6">
             <NpcsManager />
-          </TabsContent>
-          <TabsContent value="misc" className="mt-6">
-            <MiscManager />
           </TabsContent>
         </Tabs>
       </div>

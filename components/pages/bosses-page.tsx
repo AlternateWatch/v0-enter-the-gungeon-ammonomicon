@@ -42,6 +42,7 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [floorFilter, setFloorFilter] = useState<string | null>(null)
 
   useEffect(() => {
     fetchBosses()
@@ -167,7 +168,11 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
     }
   }
 
-  const filteredBosses = bosses.filter((boss) => boss.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredBosses = bosses.filter((boss) => {
+    const matchesSearch = boss.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesFloor = !floorFilter || boss.location?.includes(floorFilter)
+    return matchesSearch && matchesFloor
+  })
 
   const hasIncompleteFields = (boss: Boss): boolean => {
     const importantFields = [
@@ -193,6 +198,32 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
           <Plus className="h-4 w-4" />
           Añadir Jefe
         </Button>
+      </div>
+
+      <div className="mb-6 flex gap-2 flex-wrap">
+        <Button variant={floorFilter === null ? "default" : "outline"} onClick={() => setFloorFilter(null)} size="sm">
+          Todos los Pisos
+        </Button>
+        {[
+          "Cámara 1",
+          "Cámara 2",
+          "Cámara 3",
+          "Cámara 4",
+          "Cámara 5",
+          "Forja",
+          "Infierno",
+          "Bala del Pasado",
+          "R&G Dept.",
+        ].map((floor) => (
+          <Button
+            key={floor}
+            variant={floorFilter === floor ? "default" : "outline"}
+            onClick={() => setFloorFilter(floor)}
+            size="sm"
+          >
+            {floor}
+          </Button>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

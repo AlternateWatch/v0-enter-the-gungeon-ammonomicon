@@ -52,6 +52,7 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [qualityFilter, setQualityFilter] = useState<string | null>(null)
 
   useEffect(() => {
     fetchGuns()
@@ -182,7 +183,11 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
     }
   }
 
-  const filteredGuns = guns.filter((gun) => gun.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredGuns = guns.filter((gun) => {
+    const matchesSearch = gun.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesQuality = !qualityFilter || gun.quality === qualityFilter
+    return matchesSearch && matchesQuality
+  })
 
   const hasIncompleteFields = (gun: Gun): boolean => {
     const importantFields = [
@@ -218,6 +223,26 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
           <Plus className="h-4 w-4" />
           Añadir Arma
         </Button>
+      </div>
+
+      <div className="mb-6 flex gap-2 flex-wrap">
+        <Button
+          variant={qualityFilter === null ? "default" : "outline"}
+          onClick={() => setQualityFilter(null)}
+          size="sm"
+        >
+          Todas
+        </Button>
+        {["Inicial", "D", "C", "B", "A", "S"].map((quality) => (
+          <Button
+            key={quality}
+            variant={qualityFilter === quality ? "default" : "outline"}
+            onClick={() => setQualityFilter(quality)}
+            size="sm"
+          >
+            {quality}
+          </Button>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

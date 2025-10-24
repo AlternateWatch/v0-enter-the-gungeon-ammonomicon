@@ -1,16 +1,30 @@
 "use client"
 
 import { useState } from "react"
-import { Book, Crosshair, Skull, Package, Users, MoreHorizontal, Search } from "lucide-react"
+import { Book, Crosshair, Skull, Package, Users, Church, Apple, Key, Flame, Sparkles, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { GunsPage } from "@/components/pages/guns-page"
 import { EnemiesPage } from "@/components/pages/enemies-page"
 import { ItemsPage } from "@/components/pages/items-page"
 import { BossesPage } from "@/components/pages/bosses-page"
 import { NpcsPage } from "@/components/pages/npcs-page"
-import { MiscPage } from "@/components/pages/misc-page"
+import { AltaresPage } from "@/components/pages/altares-page"
+import { ConsumiblesPage } from "@/components/pages/consumibles-page"
+import { SecretosPage } from "@/components/pages/secretos-page"
+import { MaldicionPage } from "@/components/pages/maldicion-page"
+import { GenialidadPage } from "@/components/pages/genialidad-page"
 
-type PageType = "guns" | "enemies" | "items" | "bosses" | "npcs" | "misc"
+type PageType =
+  | "guns"
+  | "enemies"
+  | "items"
+  | "bosses"
+  | "npcs"
+  | "altares"
+  | "consumibles"
+  | "secretos"
+  | "maldicion"
+  | "genialidad"
 
 const navigation = [
   { id: "guns" as PageType, name: "Armas", icon: Crosshair },
@@ -18,7 +32,11 @@ const navigation = [
   { id: "items" as PageType, name: "Items", icon: Package },
   { id: "bosses" as PageType, name: "Bosses", icon: Skull },
   { id: "npcs" as PageType, name: "NPCs", icon: Users },
-  { id: "misc" as PageType, name: "Misceláneo", icon: MoreHorizontal },
+  { id: "altares" as PageType, name: "Altares", icon: Church },
+  { id: "consumibles" as PageType, name: "Consumibles", icon: Apple },
+  { id: "secretos" as PageType, name: "Secretos", icon: Key },
+  { id: "maldicion" as PageType, name: "Maldición", icon: Flame },
+  { id: "genialidad" as PageType, name: "Genialidad", icon: Sparkles },
 ]
 
 export function AmmonomiconShell() {
@@ -38,8 +56,16 @@ export function AmmonomiconShell() {
         return <BossesPage {...props} />
       case "npcs":
         return <NpcsPage {...props} />
-      case "misc":
-        return <MiscPage {...props} />
+      case "altares":
+        return <AltaresPage />
+      case "consumibles":
+        return <ConsumiblesPage />
+      case "secretos":
+        return <SecretosPage />
+      case "maldicion":
+        return <MaldicionPage />
+      case "genialidad":
+        return <GenialidadPage />
       default:
         return <GunsPage {...props} />
     }
@@ -81,7 +107,9 @@ export function AmmonomiconShell() {
         </nav>
 
         <div className="p-4 border-t border-sidebar-border">
-          <p className="text-xs text-sidebar-foreground/50 text-center">Datos sacados del juego y la wiki en inglés de Enter The Gungeon</p>
+          <p className="text-xs text-sidebar-foreground/50 text-center">
+            Datos sacados del juego y la wiki en inglés de Enter The Gungeon
+          </p>
         </div>
       </aside>
 
