@@ -205,15 +205,17 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
           Todos los Pisos
         </Button>
         {[
-          "Cámara 1",
-          "Cámara 2",
-          "Cámara 3",
-          "Cámara 4",
-          "Cámara 5",
+          "Fortaleza del Señor del Plomo",
+          "Armazmorra en Sí",
+          "Mina de Pólvora",
+          "Hondanada",
           "Forja",
-          "Infierno",
-          "Bala del Pasado",
-          "R&G Dept.",
+          "Infierno de las Balas",
+          "Calabozo",
+          "Abadía del Arma Verdadera",
+          "Guarida de La Rata",
+          "Departamento de I+D",
+          "Pasado",
         ].map((floor) => (
           <Button
             key={floor}
