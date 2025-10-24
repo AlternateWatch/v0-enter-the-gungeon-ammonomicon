@@ -25,6 +25,7 @@ interface Boss {
   health: string | null
   phases: number | null
   attacks: string | null
+  quote: string | null
   description: string | null
   strategy: string | null
   notes: string | null
@@ -69,6 +70,7 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
       health: "",
       phases: null,
       attacks: "",
+      quote: "",
       description: "",
       strategy: "",
       notes: "",
@@ -266,6 +268,9 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">{selectedBoss?.name}</DialogTitle>
+            {selectedBoss?.quote && (
+              <DialogDescription className="italic text-base">"{selectedBoss.quote}"</DialogDescription>
+            )}
             {selectedBoss?.location && (
               <DialogDescription className="text-base">{selectedBoss.location}</DialogDescription>
             )}
@@ -425,6 +430,16 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
                 value={editingBoss?.description || ""}
                 onChange={(e) => setEditingBoss({ ...editingBoss, description: e.target.value })}
                 rows={3}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="quote">Frase Emblemática</Label>
+              <Input
+                id="quote"
+                value={editingBoss?.quote || ""}
+                onChange={(e) => setEditingBoss({ ...editingBoss, quote: e.target.value })}
+                placeholder="La frase icónica del jefe..."
               />
             </div>
 
