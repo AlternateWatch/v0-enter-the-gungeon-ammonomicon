@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, Upload, X } from "lucide-react"
+import { Plus, Pencil, Trash2, Upload, X, AlertTriangle } from "lucide-react"
 import { uploadImage } from "@/app/actions/upload-image"
 
 interface BossesPageProps {
@@ -167,6 +167,19 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
 
   const filteredBosses = bosses.filter((boss) => boss.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
+  const hasIncompleteFields = (boss: Boss): boolean => {
+    const importantFields = [
+      boss.location,
+      boss.health,
+      boss.phases,
+      boss.attacks,
+      boss.description,
+      boss.strategy,
+      boss.image_url,
+    ]
+    return importantFields.some((field) => !field || field === "")
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -183,6 +196,12 @@ export function BossesPage({ searchQuery }: BossesPageProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredBosses.map((boss) => (
           <Card key={boss.id} className="hover:shadow-lg transition-shadow group relative">
+            {hasIncompleteFields(boss) && (
+              <div className="absolute top-2 left-2 z-10" title="Faltan campos por completar">
+                <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              </div>
+            )}
+
             <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
                 size="icon"

@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect } from "react"
-import { Plus, Pencil, Trash2, Upload, X } from "lucide-react"
+import { Plus, Pencil, Trash2, Upload, X, AlertTriangle } from "lucide-react"
 import { uploadImage } from "@/app/actions/upload-image"
 
 interface GunsPageProps {
@@ -184,6 +184,29 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
 
   const filteredGuns = guns.filter((gun) => gun.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
+  const hasIncompleteFields = (gun: Gun): boolean => {
+    const importantFields = [
+      gun.type,
+      gun.quality,
+      gun.class,
+      gun.magazine_size,
+      gun.max_ammo,
+      gun.reload_time,
+      gun.dps,
+      gun.damage,
+      gun.fire_rate,
+      gun.shot_speed,
+      gun.range,
+      gun.force,
+      gun.spread,
+      gun.sell_price,
+      gun.description,
+      gun.synergies,
+      gun.image_url,
+    ]
+    return importantFields.some((field) => !field || field === "")
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -200,6 +223,12 @@ export function GunsPage({ searchQuery }: GunsPageProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredGuns.map((gun) => (
           <Card key={gun.id} className="hover:shadow-lg transition-shadow group relative">
+            {hasIncompleteFields(gun) && (
+              <div className="absolute top-2 left-2 z-10" title="Faltan campos por completar">
+                <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              </div>
+            )}
+
             <div className="absolute top-2 right-2 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
                 size="icon"
