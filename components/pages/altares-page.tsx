@@ -348,6 +348,12 @@ export function AltaresPage() {
         ))}
       </div>
 
+      {altares.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No hay altares que coincidan con tu búsqueda.</p>
+        </div>
+      )}
+
       <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
