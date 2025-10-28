@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Book, Crosshair, Skull, Package, Users, Church, Apple, Key, Flame, Sparkles, Search } from "lucide-react"
+import { Book, Crosshair, Skull, Package, Users, Church, Apple, Key, Flame, Sparkles, Search, User } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { GunsPage } from "@/components/pages/guns-page"
 import { EnemiesPage } from "@/components/pages/enemies-page"
@@ -13,6 +13,7 @@ import { ConsumiblesPage } from "@/components/pages/consumibles-page"
 import { SecretosPage } from "@/components/pages/secretos-page"
 import { MaldicionPage } from "@/components/pages/maldicion-page"
 import { GenialidadPage } from "@/components/pages/genialidad-page"
+import { ArmazmorrristasPage } from "@/components/pages/armazmorristas-page"
 
 type PageType =
   | "guns"
@@ -20,6 +21,7 @@ type PageType =
   | "items"
   | "bosses"
   | "npcs"
+  | "armazmorristas"
   | "altares"
   | "consumibles"
   | "secretos"
@@ -31,6 +33,7 @@ const navigation = [
   { id: "enemies" as PageType, name: "Enemigos", icon: Skull },
   { id: "items" as PageType, name: "Items", icon: Package },
   { id: "bosses" as PageType, name: "Bosses", icon: Skull },
+  { id: "armazmorristas" as PageType, name: "Armazmorristas", icon: User },
   { id: "npcs" as PageType, name: "NPCs", icon: Users },
   { id: "altares" as PageType, name: "Altares", icon: Church },
   { id: "consumibles" as PageType, name: "Consumibles", icon: Apple },
@@ -56,6 +59,8 @@ export function AmmonomiconShell() {
         return <BossesPage {...props} />
       case "npcs":
         return <NpcsPage {...props} />
+      case "armazmorristas":
+        return <ArmazmorrristasPage {...props} />
       case "altares":
         return <AltaresPage />
       case "consumibles":
