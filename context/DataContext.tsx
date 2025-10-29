@@ -38,7 +38,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     const supabase = createClient();
     const categories = Object.values(wikiConfig);
-    const promises = categories.map(config => supabase.from(config.table).select('*'));
+
+    // --- CORRECCIÓN CLAVE AQUÍ ---
+    // Ahora, al crear la petición, le añadimos .order() para que ordene alfabéticamente.
+    // Usamos el 'nameField' de nuestro mapa para saber por qué columna ordenar en cada tabla.
+    const promises = categories.map(config => 
+      supabase.from(config.table).select('*').order(config.nameField, { ascending: true })
+    );
+    // ----------------------------
+
     const responses = await Promise.all(promises);
     const newData: Record<string, BaseEntity[]> = {};
     const newLookupTable = new Map<string, { type: string; data: BaseEntity }>();
@@ -55,12 +63,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setAllData(newData);
     setLookupTable(newLookupTable);
     setIsLoading(false);
-
-    // --- MICRÓFONO ---
-    console.log(`[DataContext] Índice Maestro construido. Total: ${newLookupTable.size} entradas.`);
-    const keys = Array.from(newLookupTable.keys());
-    console.log("Ejemplos de claves en el índice:", keys.slice(0, 10)); // Mostramos 10 para más info
-    // ------------------
   }, []);
 
   useEffect(() => {
