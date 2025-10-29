@@ -2,9 +2,9 @@
 
 import type { Gun } from "@/context/DataContext";
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { WikiLinkRenderer } from "@/components/WikiLinkRenderer";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export const GunDetails = ({ item: gun }: { item: Gun }) => {
   return (
@@ -20,7 +20,6 @@ export const GunDetails = ({ item: gun }: { item: Gun }) => {
           </div>
         )}
 
-        {/* --- Información Básica --- */}
         <div className="grid grid-cols-2 gap-4">
           {gun.type && <div><p className="text-sm text-muted-foreground">Tipo</p><p className="font-medium">{gun.type}</p></div>}
           {gun.quality && <div><p className="text-sm text-muted-foreground">Calidad</p><Badge variant={gun.quality === "S" ? "default" : "secondary"}>{gun.quality}</Badge></div>}
@@ -37,7 +36,6 @@ export const GunDetails = ({ item: gun }: { item: Gun }) => {
           </div>
         )}
 
-        {/* --- Sección de Estadísticas (RESTAURADA) --- */}
         <div>
           <h3 className="font-semibold mb-3">Estadísticas</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -47,14 +45,9 @@ export const GunDetails = ({ item: gun }: { item: Gun }) => {
             {gun.damage && <div><p className="text-muted-foreground">Daño</p><p className="font-mono">{gun.damage}</p></div>}
             {gun.dps && <div><p className="text-muted-foreground">DPS</p><p className="font-mono">{gun.dps}</p></div>}
             {gun.fire_rate && <div><p className="text-muted-foreground">Cadencia</p><p className="font-mono">{gun.fire_rate}</p></div>}
-            {gun.shot_speed && <div><p className="text-muted-foreground">Vel. Disparo</p><p className="font-mono">{gun.shot_speed}</p></div>}
-            {gun.range && <div><p className="text-muted-foreground">Alcance</p><p className="font-mono">{gun.range}</p></div>}
-            {gun.force && <div><p className="text-muted-foreground">Fuerza</p><p className="font-mono">{gun.force}</p></div>}
-            {gun.spread && <div><p className="text-muted-foreground">Dispersión</p><p className="font-mono">{gun.spread}</p></div>}
           </div>
         </div>
 
-        {/* --- Sinergias y Notas (RESTAURADAS) --- */}
         {gun.synergies && (
           <div>
             <h4 className="font-semibold mb-2">Sinergias</h4>

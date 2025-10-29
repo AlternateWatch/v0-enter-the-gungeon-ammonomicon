@@ -8,7 +8,7 @@ export function parseWikiLinks(text: string): WikiLinkToken[] {
     return [];
   }
 
-  const regex = /:([^:]+):/g;
+  const regex = /:([a-zA-Z0-9\s\-.']+):/g;
   const tokens: WikiLinkToken[] = [];
   let lastIndex = 0;
   let match;
@@ -20,12 +20,10 @@ export function parseWikiLinks(text: string): WikiLinkToken[] {
         content: text.substring(lastIndex, match.index),
       });
     }
-
     tokens.push({
       type: 'link',
-      content: match[1],
+      content: match[1].trim(),
     });
-
     lastIndex = regex.lastIndex;
   }
 
@@ -35,6 +33,10 @@ export function parseWikiLinks(text: string): WikiLinkToken[] {
       content: text.substring(lastIndex),
     });
   }
+
+  // --- MICRÓFONO ---
+  console.log(`[Wiki-Parser] Texto: "${text.substring(0, 50)}...". Trozos encontrados:`, tokens);
+  // ------------------
 
   return tokens;
 }
