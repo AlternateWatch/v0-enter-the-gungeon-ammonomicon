@@ -5,9 +5,11 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
+import { DataProvider } from "@/context/DataContext";
+import { DetailsModal } from "@/components/DetailsModal";
 
 export const metadata: Metadata = {
-  title: "Ammonomicon - Enter the Gungeon Wiki",
+  title: "Balanomicón - Enter the Gungeon Wiki",
   description: "Interactive encyclopedia for Enter the Gungeon",
   generator: "v0.app",
 }
@@ -20,7 +22,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <DataProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            {children}
+          </Suspense>
+          <DetailsModal />
+        </DataProvider>
         <Analytics />
       </body>
     </html>
