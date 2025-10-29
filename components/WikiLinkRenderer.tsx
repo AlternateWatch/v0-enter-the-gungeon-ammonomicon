@@ -1,6 +1,6 @@
 "use client"
 
-import { parseWikiLinks } from "@/lib/wiki-parser";
+import { parseWikiLinks, WikiLinkToken } from "@/lib/wiki-parser"; // <-- CORRECCIÓN: Usa 'parseWikiLinks'
 import { useData } from "@/context/DataContext";
 
 interface WikiLinkRendererProps {
@@ -11,16 +11,10 @@ export function WikiLinkRenderer({ text }: WikiLinkRendererProps) {
   const { isLoading, lookupTable, openDetailsModal } = useData();
 
   if (!text) return null;
+  if (isLoading) return <>{text}</>;
 
-  if (isLoading) {
-    return <>{text}</>;
-  }
-
+  // --- CORRECCIÓN: Usa 'parseWikiLinks' ---
   const tokens = parseWikiLinks(text);
-
-  // --- MICRÓFONO 3.1 ---
-  console.log(`[Renderer] Para el texto: "${text.substring(0, 50)}..."`);
-  // ----------------------
 
   const handleLinkClick = (itemName: string) => {
     const lowerCaseItemName = itemName.toLowerCase();
@@ -36,10 +30,6 @@ export function WikiLinkRenderer({ text }: WikiLinkRendererProps) {
         if (token.type === 'link') {
           const lowerCaseContent = token.content.toLowerCase();
           const linkData = lookupTable.get(lowerCaseContent);
-
-          // --- MICRÓFONO 3.2 (EL DECISIVO) ---
-          console.log(` > Buscando en el índice la clave: "${lowerCaseContent}". ¿Encontrado?:`, !!linkData);
-          // ------------------------------------
 
           if (linkData) {
             return (
