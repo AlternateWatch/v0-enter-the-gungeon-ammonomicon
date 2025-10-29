@@ -19,23 +19,13 @@ export const GunDetails = ({ item: gun }: { item: Gun }) => {
             <img src={gun.image_url} alt={gun.name} className="w-80 h-auto object-contain" style={{ imageRendering: "pixelated" }} />
           </div>
         )}
-
         <div className="grid grid-cols-2 gap-4">
           {gun.type && <div><p className="text-sm text-muted-foreground">Tipo</p><p className="font-medium">{gun.type}</p></div>}
           {gun.quality && <div><p className="text-sm text-muted-foreground">Calidad</p><Badge variant={gun.quality === "S" ? "default" : "secondary"}>{gun.quality}</Badge></div>}
           {gun.class && <div><p className="text-sm text-muted-foreground">Clase</p><p className="font-medium">{gun.class}</p></div>}
           {gun.sell_price && <div><p className="text-sm text-muted-foreground">Precio de Venta</p><p className="font-medium">{gun.sell_price}</p></div>}
         </div>
-
-        {gun.description && (
-          <div>
-            <h4 className="font-semibold mb-2">Descripción</h4>
-            <div className="text-base">
-              <WikiLinkRenderer text={gun.description} />
-            </div>
-          </div>
-        )}
-
+        {gun.description && <div><h4 className="font-semibold mb-2">Descripción</h4><div className="text-base"><WikiLinkRenderer text={gun.description} /></div></div>}
         <div>
           <h3 className="font-semibold mb-3">Estadísticas</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -47,20 +37,20 @@ export const GunDetails = ({ item: gun }: { item: Gun }) => {
             {gun.fire_rate && <div><p className="text-muted-foreground">Cadencia</p><p className="font-mono">{gun.fire_rate}</p></div>}
           </div>
         </div>
-
         {gun.synergies && (
           <div>
             <h4 className="font-semibold mb-2">Sinergias</h4>
-            <div className="text-base whitespace-pre-line">
+            {/* --- CORRECCIÓN AQUÍ --- */}
+            <div className="text-base whitespace-pre-wrap">
               <WikiLinkRenderer text={gun.synergies} />
             </div>
           </div>
         )}
-        
         {gun.notes && (
           <div>
             <h4 className="font-semibold mb-2">Notas</h4>
-            <div className="text-base whitespace-pre-line">
+            {/* --- CORRECCIÓN AQUÍ --- */}
+            <div className="text-base whitespace-pre-wrap">
               <WikiLinkRenderer text={gun.notes} />
             </div>
           </div>
