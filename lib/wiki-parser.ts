@@ -8,8 +8,11 @@ export function parseWikiLinks(text: string): WikiLinkToken[] {
     return [];
   }
 
-  // La regla que busca un espacio o el inicio de línea ANTES del enlace.
-  const regex = /(^|\s):([a-zA-Z0-9\s\-.']+):/g;
+  // --- LA REGLA CORREGIDA Y DEFINITIVA CON SOPORTE UNICODE ---
+  // Explicación:
+  // (\p{L}) -> Busca cualquier letra de cualquier idioma (incluyendo á, é, í, ó, ú, ñ, Ü, etc.).
+  // (u) -> Es una "bandera" que activa el modo Unicode para que \p{L} funcione.
+  const regex = /(^|\s):([\p{L}0-9\s\-.']+):/gu;
   
   const tokens: WikiLinkToken[] = [];
   let lastIndex = 0;
